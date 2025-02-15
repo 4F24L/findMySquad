@@ -7,15 +7,15 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { currentUser, signUserOut } = useAuth();
   return (
-    <div className=" flex justify-between px-6 py-6">
-      <div className=" font-bold text-2xl">FindMySquad</div>
+    <div className=" flex justify-between px-6 py-6 items-center">
+      <div className=" font-bold text-2xl cursor-pointer">FindMySquad</div>
 
       <ul className=" flex justify-between gap-5">
         <li>
           <Link to="/teams">Squads</Link>
         </li>
         <li>
-          <Link to="hackathons">Upcoming Battles</Link>
+          <Link to="/hackathons">Upcoming Battles</Link>
         </li>
         <li>
           <Link to="/chats">Squad Chat</Link>
