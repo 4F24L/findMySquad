@@ -55,7 +55,7 @@ export default function Profile() {
       }
     }
 
-    fetchGitHubData();
+    // fetchGitHubData();
   }, [currentUser]);
 
   if (!currentUser) {
@@ -141,8 +141,8 @@ export default function Profile() {
           </ul>
         }
       </div>
-      <div className="flex justify-between">
-        <div className="flex flex-col gap-2 bg-white w-[45%] ml-6  justify-center p-4 rounded-lg mt-2">
+      <div className="flex justify-around flex-wrap px-6 gap-3">
+        <div className="flex flex-col flex-1 gap-2 bg-white w-full md:w-5/11  justify-center p-4 rounded-lg mt-2">
           <span className="text-normal font-medium">About :</span>
           <p>N / A</p>
 
@@ -170,7 +170,7 @@ export default function Profile() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-2 bg-white mx-6 p-4 rounded-lg mt-2">
+        <div className="flex flex-col  gap-2  w-full md:w-5/11 bg-white p-4 rounded-lg mt-2">
           <span className=" font-medium text-lg text-start mb-3">
             Repositories count
           </span>
