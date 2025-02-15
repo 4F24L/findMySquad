@@ -1,4 +1,6 @@
-# 🚀 Find My Squad  
+# 🚀 findMySquad 
+![image](https://github.com/user-attachments/assets/07b51ad8-caef-4b26-b5dc-b86362be4947)
+
 
 A platform that helps users find teammates for hackathons or projects based on their verified skills using the GitHub API. No false skill claims – only real expertise!  
 
@@ -55,6 +57,7 @@ This project is licensed under the **MIT License**.
 For any queries or suggestions, feel free to reach out:  
 
 📧 **afzalmir2003@gmail.com**  
-📧 **amitroy.thedev@gmail.com**  
+📧 **amitroy-thedev@gmail.com**  
 
-🔥 **Find Your Squad | Build Together | Win Hackathons!** 🔥  
+## 🔥 Find Your Squad | Build Together | Win Hackathons! 🔥  
+
