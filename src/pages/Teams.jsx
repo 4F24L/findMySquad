@@ -4,7 +4,9 @@ import { collection, getDocs, addDoc } from "firebase/firestore";
 import TeamCard from "../components/TeamCard";
 import { useAuth } from "../contexts/AuthContext";
 import NavBar from "../components/NavBar";
-import { UserPlus, Search, Filter } from "lucide-react";
+import { UserPlus, Search, Filter, X } from "lucide-react";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 export default function Teams() {
   const [teams, setTeams] = useState([]);
@@ -95,6 +97,7 @@ export default function Teams() {
       });
 
       alert("Squad Formed Successfully!");
+      setIsCreateModalOpen(false)
     } catch (error) {
       console.error("Error forming squad:", error);
     }
@@ -114,16 +117,26 @@ export default function Teams() {
       <NavBar />
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center p-4">
-          <form onSubmit={formASquad} className="flex flex-col gap-3 p-5 bg-gray-100 rounded-lg">
-            <input type="text" name="team_name" placeholder="Team Name" value={formData.team_name} onChange={handleChange} required />
-            <input type="text" name="hackathon_name" placeholder="Hackathon Name" value={formData.hackathon_name} onChange={handleChange} required />
-            <input type="text" name="hackathon_description" placeholder="Hackathon Description" value={formData.hackathon_description} onChange={handleChange} required />
-            <input type="number" name="total_members" placeholder="Total Soldiers Needed" value={formData.total_members} onChange={handleChange} required />
-            <input type="text" name="skills" placeholder="Skills (comma separated)" value={formData.skills} onChange={handleChange} required />
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Form a Squad</button>
-          </form>
-        </div>
+          <div className="flex min-h-screen items-center justify-center p-4">
+            <div className="bg-white p-6 max-w-2x relative rounded-lg shadow-2xl">
+
+              <h3 className="text-lg font-medium text-gray-900">Create a New Team</h3>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="rounded-full p-1 hover:bg-gray-100 absolute top-2 right-2"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+              <form onSubmit={formASquad} className="flex flex-col gap-3 p-5 rounded-lg">
+                <Input type={"text"} name={"team_name"} placeholder={"Team Name"} value={formData.team_name} onChange={handleChange} isRequired={true} />
+                <Input type={"text"} name={"hackathon_name"} placeholder={"Hackathon Name"} value={formData.hackathon_name} onChange={handleChange} isRequired={true} />
+                <Input type={"text"} name={"hackathon_description"} placeholder={"Hackathon Description"} value={formData.hackathon_description} onChange={handleChange} isRequired={true} />
+                <Input type={"number"} name={"total_members"} placeholder={"Total Soldiers Needed"} value={formData.total_members} onChange={handleChange} isRequired={true} />
+                <Input type={"text"} name={"skills"} placeholder={"Skills (comma separated)"} value={formData.skills} onChange={handleChange} isRequired={true} />
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Form a Squad</button>
+              </form>
+            </div>
+          </div>
         </div>
       )}
 
@@ -134,13 +147,10 @@ export default function Teams() {
             <p className="mt-1 text-sm text-gray-500">Find your perfect squad or create your own</p>
           </div>
           {currentUser &&
-            <button
+            <Button
               onClick={() => setIsCreateModalOpen(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <UserPlus className="h-4 w-4 mr-2" />
-              Create a Squad
-            </button>}
+              bg={"bg-blue-500"}
+             label={"Create a Squad"}/>}
         </div>
 
         <div className="mb-6 flex items-center gap-4">
@@ -159,8 +169,8 @@ export default function Teams() {
           <button
             onClick={() => setIsFilterOpen(true)}
             className={`inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium ${Object.values(filters).some((f) => (Array.isArray(f) ? f.length > 0 : f))
-                ? "border-indigo-600 text-indigo-600 bg-indigo-50 hover:bg-indigo-100"
-                : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+              ? "border-indigo-600 text-indigo-600 bg-indigo-50 hover:bg-indigo-100"
+              : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
               }`}
           >
             <Filter className="h-4 w-4 mr-2" />

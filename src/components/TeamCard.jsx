@@ -1,4 +1,4 @@
-import { Target, UsersRound } from "lucide-react";
+import { CheckCircle, Clock, Shield, Target, UsersRound } from "lucide-react";
 import Button from "./Button";
 import { useAuth } from "../contexts/AuthContext";
 import { arrayUnion, arrayRemove, doc, updateDoc, getDoc } from "firebase/firestore";
@@ -26,7 +26,7 @@ const TeamCard = ({ id, team_name, hackathon_name, hackathon_description, total_
   const hasRequested = joinRequests?.some(request => request.uid === currentUser?.uid);
 
   const formatDate = (date) => {
-    if (!date) return "Unknown Date"; 
+    if (!date) return "Unknown Date";
 
     if (date.seconds) {
       return new Intl.DateTimeFormat('en-US', {
@@ -147,24 +147,71 @@ const TeamCard = ({ id, team_name, hackathon_name, hackathon_description, total_
         <button className="cursor-pointer font-medium rounded-lg h-10 py-1 px-4 bg-[#f5f5f5] text-zinc-600">View Details</button>
       </div>
 
-      {currentUser?.uid === creatorId && (
         <div className="mt-4 p-3 bg-gray-100 rounded-md">
-          <h3 className="font-medium mb-2">Pending Join Requests</h3>
-          {joinRequests?.length > 0 ? (
-            joinRequests.map((request) => (
-              <div key={request.uid} className="flex justify-between items-center p-2 bg-white shadow-sm rounded-md mb-2">
-                <p>{request.displayName}</p>
-                <div className="flex gap-2">
-                  <Button onClick={() => handleApprove(request.uid, request.displayName)} bg={"bg-[#4be74b]"} label={"Approve"}/>
-                  <Button onClick={() => handleReject(request.uid)} bg={"bg-[#e7724b]"} label={"Reject"}/>
-                </div>
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-medium text-gray-700 flex items-center">
+                <Shield className="h-4 w-4 text-gray-400 mr-2" />
+                Team Members
+              </h3>
+            </div>
+
+            <div className="space-y-3">
+              {/* Active Members */}
+              <div className="space-y-2">
+                {members?.map((member) => (
+                  <div key={member.uid} className="flex items-center justify-between p-2 rounded-lg bg-gray-50">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={member?.avatar || "https://via.placeholder.com/40"}
+                        alt={member.displayName}
+                        className="h-8 w-8 rounded-full ring-2 ring-white"
+                      />
+                      <p className="text-sm font-medium text-gray-900">{member.displayName}</p>
+                    </div>
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Active
+                    </span>
+                  </div>
+                ))}
+
               </div>
-            ))
-          ) : (
-            <p>No pending requests</p>
-          )}
+
+              {/* Pending Members */}
+              {Array.isArray(joinRequests) && currentUser?.uid === creatorId && joinRequests.length > 0 && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-gray-500 mt-3 mb-2">Pending Requests</h5>
+                  {joinRequests.map((request) => (
+                    <div key={request.uid} className="flex items-center justify-between p-2 rounded-lg bg-gray-50 border border-gray-100">
+                      <div className="flex items-center space-x-3">
+                        <img
+                          src={request?.photoUrl}
+                          alt={request?.displayName}
+                          className="h-8 w-8 rounded-full ring-2 ring-white"
+                        />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{request?.displayName}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button onClick={() => handleApprove(request?.uid, request?.displayName)} bg={"bg-[#4be74b]"} label={"Approve"} />
+                          <Button onClick={() => handleReject(request?.uid, request?.displayName)} bg={"bg-[#e7724b]"} label={"Reject"} />
+                        </div>
+                      </div>
+
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <Clock className="w-3 h-3 mr-1" />
+                        Pending
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+            </div>
+          </div>
+
         </div>
-      )}
     </div>
   );
 };

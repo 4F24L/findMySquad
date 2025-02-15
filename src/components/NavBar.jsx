@@ -15,7 +15,7 @@ const NavBar = () => {
           <Link to="/teams">Squads</Link>
         </li>
         <li>
-          <Link to="hackathons">Upcoming Battles</Link>
+          <Link to="/hackathons">Upcoming Battles</Link>
         </li>
         <li>
           <Link to="/chats">Squad Chat</Link>
@@ -26,7 +26,7 @@ const NavBar = () => {
       </ul>
       {currentUser ?  <Button onClick={() => {
           signUserOut()
-        }} label={"Logout"} bg={"bg-red-500"} textClr={"text-white"} /> : <div className="flex gap-5 justify-between">
+        }} label={"Logout"} bg={"bg-[#D32F2F]"} textClr={"text-white"} /> : <div className="flex gap-5 justify-between">
         <Button onClick={() => {
           navigate("/register")
         }} label={"Sign Up"} bg={"bg-white"} textClr={"text-black"} classes={"border-2 border-[#a78dfb]"} />
