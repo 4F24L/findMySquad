@@ -44,7 +44,7 @@ export default function Register() {
       <div className="">
         <div className="flex flex-col items-center gap-2 mb-9">
           <UsersRound size={50} color="#a78dfb" className="mb-4" />
-          <p className=" text-3xl font-bold">Sign in to findMySquad</p>
+          <p className=" text-3xl font-bold">Sign up to findMySquad</p>
           <p className=" text-sm">
             Connect with fellow developers and join exciting hackathons
           </p>
@@ -91,9 +91,13 @@ export default function Register() {
               alt="GitHub Logo"
               className="w-5 h-5 inline-block mr-2"
             />
-            Sign in with GitHub
-          </Button>
+            Sign up with GitHub
+          </Button>      
         </form>
+
+        <p className=" text-center text-gray-600 text-sm mt-5 cursor-pointer">Already have an account ? <span className="text-blue-500" onClick={()=>{
+            navigate("/login");
+          }}>Log in</span></p>
       </div>
     </div>
   );
