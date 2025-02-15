@@ -25,7 +25,6 @@ Find My Squad connects developers and innovators by allowing them to search for 
 ### 🔥 Backend & Database  
 - **Firebase** – Authentication & Firestore database  
 - **GitHub API** – Fetch verified user skills  
-- **Node.js & Express** – Backend logic  
 
 ### 🚀 Deployment  
 - **Vercel** – Frontend hosting  
