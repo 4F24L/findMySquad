@@ -7,8 +7,8 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { currentUser, signUserOut } = useAuth();
   return (
-    <div className=" flex justify-between px-6 py-6">
-      <div className=" font-bold text-2xl">FindMySquad</div>
+    <div className=" flex justify-between px-6 py-6 items-center">
+      <div className=" font-bold text-2xl cursor-pointer">FindMySquad</div>
 
       <ul className=" flex justify-between gap-5">
         <li>
