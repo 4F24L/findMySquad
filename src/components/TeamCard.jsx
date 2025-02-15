@@ -95,7 +95,7 @@ const TeamCard = ({ id, team_name, hackathon_name, hackathon_description, total_
   };
 
   return (
-    <div className="flex flex-col w-10/21 shad bg-white p-5 rounded-2xl">
+    <div className="flex flex-col w-full md:w-10/21 shad bg-white p-5 rounded-2xl">
       <div className="flex justify-between w-[100%]">
         <p className="font-medium text-2xl">{team_name}</p>
         <p className="bg-[#a78dfb] text-white font-medium px-4 py-1 rounded-full">
