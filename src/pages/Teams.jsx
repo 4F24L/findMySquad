@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import TeamCard from "../components/TeamCard";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -15,28 +15,29 @@ export default function Teams() {
     total_members: 0,
     members: [],
     skills: "",
-    createdBy: currentUser?.uid,
+    createdBy: "",
+    creatorId : ""
   });
 
 
-  useEffect(() => {
-    async function fetchTeams() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "teams"));
-        const teamsData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setTeams(teamsData);
-      } catch (error) {
-        console.error("Error fetching teams:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchTeams();
-  }, []);
+const fetchTeams = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "teams"));
+    const teamsData = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setTeams(teamsData);
+  } catch (error) {
+    console.error("Error fetching teams:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
+useEffect(() => {
+  fetchTeams();
+}, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -44,18 +45,24 @@ export default function Teams() {
 
   const formASquad = async (e) => {
     e.preventDefault();
-
+  
+    if (!currentUser) {
+      alert("You must be logged in to form a squad.");
+      return;
+    }
+  
     try {
       const newTeam = {
         ...formData,
-        total_members: formData.total_members,
-        members: [],
+        createdBy: currentUser.displayName || "Anonymous",
+        creatorId: currentUser.uid || "unknown",
         skills: formData.skills.split(",").map(skill => skill.trim()),
         createdOn: new Date(),
       };
-
+  
       const docRef = await addDoc(collection(db, "teams"), newTeam);
       setTeams([...teams, { id: docRef.id, ...newTeam }]);
+  
       setFormData({
         team_name: "",
         hackathon_name: "",
@@ -63,14 +70,16 @@ export default function Teams() {
         total_members: 0,
         members: [],
         skills: "",
-        createdBy: currentUser?.uid,
+        createdBy: currentUser?.displayName || "Anonymous",
+        creatorId: currentUser?.uid || "unknown",
       });
-
+  
       alert("Squad Formed Successfully!");
     } catch (error) {
       console.error("Error forming squad:", error);
     }
   };
+  
 
   if (loading) return <p>Loading Squads...</p>;
 
@@ -90,6 +99,7 @@ export default function Teams() {
           teams.map(team => (
             <TeamCard 
               key={team.id}
+              id={team.id}
               team_name={team.team_name}
               hackathon_name={team.hackathon_name}
               hackathon_description={team.hackathon_description}
@@ -98,6 +108,8 @@ export default function Teams() {
               skills={team.skills || []}
               createdBy={team.createdBy}
               createdOn={team.createdOn}
+              creatorId={team.creatorId}
+              refreshTeams={fetchTeams}
             />
           ))
         ) : (
