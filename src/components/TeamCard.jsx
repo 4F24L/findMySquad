@@ -1,13 +1,29 @@
 import { Target, UsersRound } from "lucide-react";
 import Button from "./Button";
 import { useAuth } from "../contexts/AuthContext";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, arrayRemove, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { useEffect, useState } from "react";
 
 const TeamCard = ({ id, team_name, hackathon_name, hackathon_description, total_members, members, skills, createdBy, creatorId, createdOn }) => {
   const { currentUser } = useAuth();
+  const [joinRequests, setJoinRequests] = useState([]);
+
+  useEffect(() => {
+    const fetchTeamData = async () => {
+      const teamRef = doc(db, "teams", id);
+      const teamSnap = await getDoc(teamRef);
+
+      if (teamSnap.exists()) {
+        setJoinRequests(teamSnap.data().joinRequests || []);
+      }
+    };
+
+    fetchTeamData();
+  }, [id]);
 
   const isJoined = members?.some(member => member.uid === currentUser?.uid);
+  const hasRequested = joinRequests?.some(request => request.uid === currentUser?.uid);
 
   const formatDate = (date) => {
     if (!date) return "Unknown Date"; 
@@ -27,29 +43,54 @@ const TeamCard = ({ id, team_name, hackathon_name, hackathon_description, total_
     }).format(new Date(date));
   };
 
-  const handleJoinTeam = async () => {
+  const handleJoinRequest = async () => {
     if (!currentUser) {
-      alert("You must be logged in to join a squad.");
-      return;
-    }
-
-    if (isJoined) {
-      alert("You are already part of this squad.");
+      alert("You must be logged in to request to join a squad.");
       return;
     }
 
     try {
       const teamRef = doc(db, "teams", id);
       await updateDoc(teamRef, {
-        members: arrayUnion({
+        joinRequests: arrayUnion({
           uid: currentUser.uid,
           displayName: currentUser.displayName || "Anonymous",
         }),
       });
 
-      alert("Joined the squad successfully!");
+      alert("Join request sent to the squad creator!");
+      setJoinRequests(prev => [...prev, { uid: currentUser.uid, displayName: currentUser.displayName || "Anonymous" }]);
     } catch (error) {
-      console.error("Error joining squad:", error);
+      console.error("Error requesting to join squad:", error);
+    }
+  };
+
+  const handleApprove = async (uid, displayName) => {
+    try {
+      const teamRef = doc(db, "teams", id);
+      await updateDoc(teamRef, {
+        members: arrayUnion({ uid, displayName }),
+        joinRequests: joinRequests.filter(request => request.uid !== uid),
+      });
+
+      setJoinRequests(prev => prev.filter(request => request.uid !== uid));
+      alert("User added to the squad!");
+    } catch (error) {
+      console.error("Error approving request:", error);
+    }
+  };
+
+  const handleReject = async (uid) => {
+    try {
+      const teamRef = doc(db, "teams", id);
+      await updateDoc(teamRef, {
+        joinRequests: joinRequests.filter(request => request.uid !== uid),
+      });
+
+      setJoinRequests(prev => prev.filter(request => request.uid !== uid));
+      alert("Join request rejected.");
+    } catch (error) {
+      console.error("Error rejecting request:", error);
     }
   };
 
@@ -95,12 +136,35 @@ const TeamCard = ({ id, team_name, hackathon_name, hackathon_description, total_
 
       <div className="flex justify-end gap-5">
         {currentUser && currentUser?.uid !== creatorId && (
-          isJoined
-            ? <Button label={"Already in Squad"} isDisabled={true} />
-            : <Button label={"Join the Squad"} onClick={handleJoinTeam} />
+          isJoined ? (
+            <Button label={"Already in Squad"} isDisabled={true} />
+          ) : hasRequested ? (
+            <Button label={"Request Sent"} isDisabled={true} />
+          ) : (
+            <Button label={"Request to Join"} onClick={handleJoinRequest} />
+          )
         )}
         <button className="cursor-pointer font-medium rounded-lg h-10 py-1 px-4 bg-[#f5f5f5] text-zinc-600">View Details</button>
       </div>
+
+      {currentUser?.uid === creatorId && (
+        <div className="mt-4 p-3 bg-gray-100 rounded-md">
+          <h3 className="font-medium mb-2">Pending Join Requests</h3>
+          {joinRequests?.length > 0 ? (
+            joinRequests.map((request) => (
+              <div key={request.uid} className="flex justify-between items-center p-2 bg-white shadow-sm rounded-md mb-2">
+                <p>{request.displayName}</p>
+                <div className="flex gap-2">
+                  <Button onClick={() => handleApprove(request.uid, request.displayName)} bg={"bg-[#4be74b]"} label={"Approve"}/>
+                  <Button onClick={() => handleReject(request.uid)} bg={"bg-[#e7724b]"} label={"Reject"}/>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No pending requests</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

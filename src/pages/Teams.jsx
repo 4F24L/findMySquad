@@ -7,7 +7,7 @@ import { useAuth } from "../contexts/AuthContext";
 export default function Teams() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
-  const {currentUser} = useAuth();
+  const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
     team_name: "",
     hackathon_name: "",
@@ -16,28 +16,29 @@ export default function Teams() {
     members: [],
     skills: "",
     createdBy: "",
-    creatorId : ""
+    creatorId: ""
   });
 
+  const fetchTeams = async () => {
+    try {
+      setLoading(true);
+      const querySnapshot = await getDocs(collection(db, "teams"));
+      const teamsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTeams(teamsData);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const fetchTeams = async () => {
-  try {
-    const querySnapshot = await getDocs(collection(db, "teams"));
-    const teamsData = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setTeams(teamsData);
-  } catch (error) {
-    console.error("Error fetching teams:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  useEffect(() => {
+    fetchTeams();
+  }, []);
 
-useEffect(() => {
-  fetchTeams();
-}, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -57,7 +58,13 @@ useEffect(() => {
         createdBy: currentUser.displayName || "Anonymous",
         creatorId: currentUser.uid || "unknown",
         skills: formData.skills.split(",").map(skill => skill.trim()),
-        createdOn: new Date(),
+        createdOn: new Date().toISOString(),
+        members: [
+          {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName || "Anonymous",
+          }
+        ],
       };
   
       const docRef = await addDoc(collection(db, "teams"), newTeam);
@@ -70,8 +77,8 @@ useEffect(() => {
         total_members: 0,
         members: [],
         skills: "",
-        createdBy: currentUser?.displayName || "Anonymous",
-        creatorId: currentUser?.uid || "unknown",
+        createdBy: "",
+        creatorId: "",
       });
   
       alert("Squad Formed Successfully!");
@@ -80,19 +87,21 @@ useEffect(() => {
     }
   };
   
-
+  
   if (loading) return <p>Loading Squads...</p>;
 
   return (
     <>
-      {currentUser && <form onSubmit={formASquad} className="flex flex-col gap-3 p-5 bg-gray-100 rounded-lg">
-        <input type="text" name="team_name" placeholder="Team Name" value={formData.team_name} onChange={handleChange} required />
-        <input type="text" name="hackathon_name" placeholder="Hackathon Name" value={formData.hackathon_name} onChange={handleChange} required />
-        <input type="text" name="hackathon_description" placeholder="Hackathon Description" value={formData.hackathon_description} onChange={handleChange} required />
-        <input type="number" name="total_members" placeholder="Total Soldiers Needed" value={formData.total_members} onChange={handleChange} required />
-        <input type="text" name="skills" placeholder="Skills (comma separated)" value={formData.skills} onChange={handleChange} required />
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Form a Squad</button>
-      </form>}
+      {currentUser && (
+        <form onSubmit={formASquad} className="flex flex-col gap-3 p-5 bg-gray-100 rounded-lg">
+          <input type="text" name="team_name" placeholder="Team Name" value={formData.team_name} onChange={handleChange} required />
+          <input type="text" name="hackathon_name" placeholder="Hackathon Name" value={formData.hackathon_name} onChange={handleChange} required />
+          <input type="text" name="hackathon_description" placeholder="Hackathon Description" value={formData.hackathon_description} onChange={handleChange} required />
+          <input type="number" name="total_members" placeholder="Total Soldiers Needed" value={formData.total_members} onChange={handleChange} required />
+          <input type="text" name="skills" placeholder="Skills (comma separated)" value={formData.skills} onChange={handleChange} required />
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Form a Squad</button>
+        </form>
+      )}
 
       <div className="flex flex-wrap gap-5 mt-5 justify-between px-6">
         {teams.length > 0 ? (
