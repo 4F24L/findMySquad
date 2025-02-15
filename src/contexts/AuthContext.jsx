@@ -3,10 +3,10 @@ import { auth } from "../firebase";
 import { onAuthStateChanged, signOut, signInWithPopup, GithubAuthProvider } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-const authContext = createContext();
+const AuthContext = createContext();
 
 export function useAuth() {
-  return useContext(authContext);
+  return useContext(AuthContext);
 }
 
 export function AuthProvider({ children }) {
@@ -44,8 +44,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <authContext.Provider value={{ currentUser, error, signInWithGithub, signUserOut }}>
+    <AuthContext.Provider value={{ currentUser, error, signInWithGithub, signUserOut }}>
       {children}
-    </authContext.Provider>
+    </AuthContext.Provider>
   );
 }
