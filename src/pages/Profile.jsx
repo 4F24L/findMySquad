@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Profile() {
   const { currentUser } = useAuth();
@@ -37,14 +37,13 @@ export default function Profile() {
         });
 
         const avatar_url = repos.length > 0 ? repos[0].owner.avatar_url : currentUser.photoURL;
-
         setGithubData({ repos, languageCount, avatar_url });
-      } catch (err) {
+
+    } catch (err) {
         setError(err.message);
-      } finally {
         setLoading(false);
-      }
     }
+}
 
     fetchGitHubData();
   }, [currentUser]);
