@@ -116,6 +116,7 @@ export default function Teams() {
       team.hackathon_description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
   return (
     <>
       <NavBar />

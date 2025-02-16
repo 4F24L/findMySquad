@@ -42,8 +42,6 @@ export default function Register() {
         } catch (error) {
           toast.error("Error fetching GitHub avatar:", error);
         }
-      }
-  
       // Update Firebase profile
       await updateProfile(user, {
         displayName: githubUsername,
@@ -53,12 +51,22 @@ export default function Register() {
       setIsLoading(false);
       toast.success("Registration successful!");
       navigate("/profile");
-    } catch (err) {
-      toast.error(err.message);
-      setIsLoading(false);
     }
+
+    // Update Firebase profile
+    await updateProfile(user, {
+      displayName: githubUsername,
+      photoURL: githubAvatarUrl,
+    });
+
+    setIsLoading(false);
+    navigate("/profile");
+  } catch (err) {
+    alert(err.message);
+    setIsLoading(false);
   }
-  
+}
+
 
   return (
     <div className="flex justify-center items-center h-screen p-3">
