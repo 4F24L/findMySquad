@@ -12,8 +12,6 @@ export default function Profile() {
   const [error, setError] = useState("");
   const [totalRepos, setTotalRepos] = useState(0);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (!currentUser) return;
 

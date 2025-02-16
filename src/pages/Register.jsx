@@ -19,27 +19,6 @@ export default function Register() {
   const { signInWithGithub } = useAuth();
 
   async function handleReg(e) {
-<<<<<<< HEAD
-  e.preventDefault();
-  setIsLoading(true);
-
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-
-    // Fetch GitHub avatar
-    let githubAvatarUrl = "";
-    if (githubUsername) {
-      try {
-        const response = await fetch(`https://api.github.com/users/${githubUsername}`);
-        if (response.ok) {
-          const data = await response.json();
-          githubAvatarUrl = data.avatar_url || "";
-=======
     e.preventDefault();
     setIsLoading(true);
   
@@ -62,14 +41,7 @@ export default function Register() {
           }
         } catch (error) {
           toast.error("Error fetching GitHub avatar:", error);
->>>>>>> 867c3362fc4ade986e83ececed518b1f7c960c38
         }
-      } catch (error) {
-        console.error("Error fetching GitHub avatar:", error);
-      }
-<<<<<<< HEAD
-=======
-  
       // Update Firebase profile
       await updateProfile(user, {
         displayName: githubUsername,
@@ -79,10 +51,6 @@ export default function Register() {
       setIsLoading(false);
       toast.success("Registration successful!");
       navigate("/profile");
-    } catch (err) {
-      toast.error(err.message);
-      setIsLoading(false);
->>>>>>> 867c3362fc4ade986e83ececed518b1f7c960c38
     }
 
     // Update Firebase profile
