@@ -4,6 +4,9 @@ import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import githubLogo from "../assets/github.svg";
 import { AtSign, CalendarCheck, Link, Send } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import UserRating from "../components/UserRating";
 
 export default function Profile() {
   const { currentUser } = useAuth();
@@ -11,6 +14,8 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [totalRepos, setTotalRepos] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser) return;
@@ -58,8 +63,16 @@ export default function Profile() {
     fetchGitHubData();
   }, [currentUser]);
 
+
   if (!currentUser) {
-    return <h1>Please log in with GitHub to view your profile.</h1>;
+    return (
+      <h1 className=" h-screen flex flex-col items-center justify-center text-xl">
+        Please log in with GitHub to view your profile. <br />
+        <span className=" text-2xl font-medium text-red-300">
+          Redirecting...
+        </span>
+      </h1>
+    );
   }
 
   if (loading) return <h1>Loading GitHub data...</h1>;
@@ -124,22 +137,27 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="flex gap-2 bg-white mx-6 px-3  items-center p-4 rounded-b-lg">
-        <span className=" font-medium">Skills</span>
-        {
-          <ul className=" flex flex-wrap">
-            {Object.entries(githubData.languageCount).map(
-              ([language, count]) => (
-                <li
-                  className="flex text-base font-medium px-3 py-1 text-[#9b7cff] bg-[#eef2ff] mx-1 rounded-full"
-                  key={language}
-                >
-                  {language}
-                </li>
-              )
-            )}
-          </ul>
-        }
+      <div className="flex gap-2 bg-white mx-6 px-6 justify-between  items-center p-4 rounded-b-lg">
+        <div className="flex">
+          <span className=" font-medium">Skills</span>
+          {
+            <ul className=" flex flex-wrap">
+              {Object.entries(githubData.languageCount).map(
+                ([language, count]) => (
+                  <li
+                    className="flex text-base font-medium px-3 py-1 text-[#9b7cff] bg-[#eef2ff] mx-1 rounded-full"
+                    key={language}
+                  >
+                    {language}
+                  </li>
+                )
+              )}
+            </ul>
+          }
+        </div>
+
+        <div><UserRating user={currentUser?.reloadUserInfo?.screenName ||
+                  currentUser.displayName}/></div>
       </div>
       <div className="flex justify-between">
         <div className="flex flex-col gap-2 flex-1 bg-white w-[45%] ml-6  justify-center p-4 rounded-lg mt-2">
@@ -188,8 +206,9 @@ export default function Profile() {
           </ul>
         </div>
       </div>
-
-       
+      <div>
+        <Toaster position="top-right" />
+      </div>
     </>
   );
 }
