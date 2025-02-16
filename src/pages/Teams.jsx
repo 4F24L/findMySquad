@@ -7,6 +7,7 @@ import NavBar from "../components/NavBar";
 import { UserPlus, Search, Filter, X } from "lucide-react";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Teams() {
   const [teams, setTeams] = useState([]);
@@ -39,7 +40,7 @@ export default function Teams() {
       }));
       setTeams(teamsData);
     } catch (error) {
-      console.error("Error fetching teams:", error);
+      toast.error("Error fetching teams:", error);
     } finally {
       setLoading(false);
     }
@@ -58,7 +59,7 @@ export default function Teams() {
     e.preventDefault();
 
     if (!currentUser) {
-      alert("You must be logged in to form a squad.");
+      toast.error("You must be logged in to form a squad.");
       return;
     }
 
@@ -101,10 +102,10 @@ export default function Teams() {
         photoURL: currentUser.photoURL || ""
       });
 
-      alert("Squad Formed Successfully!");
+      toast.success("Squad Formed Successfully!");
       setIsCreateModalOpen(false)
     } catch (error) {
-      console.error("Error forming squad:", error);
+      toast.error("Error forming squad:", error);
     }
   };
 
@@ -201,6 +202,8 @@ export default function Teams() {
           )}
         </div>
       </div>
+    <div><Toaster position="top-right"/></div>
+
     </>
   );
 }

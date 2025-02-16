@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Button from "../components/Button";
 import hackathonsData from "../../public/HackathonsData.json";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function HackathonList() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -100,9 +101,9 @@ export default function HackathonList() {
                     {hackathon.mode}
                   </p>
                 </div>
-                <p className="text-emerald-600 w-max px-2 rounded-lg border">
+                {/* <p className="text-emerald-600 w-max px-2 rounded-lg border">
                   {hackathon.theme}
-                </p>
+                </p> */}
 
                 <div className="mt-4 space-y-2 text-gray-700 w-[100%]">
                   <p className="flex items-center">
@@ -150,6 +151,7 @@ export default function HackathonList() {
           )}
         </div>
       </div>
+      <div><Toaster position="top-right"/></div>
     </>
   );
 }

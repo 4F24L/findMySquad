@@ -60,7 +60,7 @@ export default function Chats() {
             <div className="flex h-[87vh] bg-gray-100 gap-2 px-2">
                 {/* Chat List */}
                 <div className="w-full md:w-1/3 p-4 overflow-y-auto bg-white shadow-lg relative rounded-2xl no-scrollbar">
-                    <div className="sticky top-0 z-10 bg-white p-4 shadow-md">
+                    <div className="sticky top-0 z-10 bg-white p-4 shadow-2xl rounded-lg">
                         <div className="flex items-center border p-2 rounded-lg bg-gray-50">
                             <Search size={20} className="text-gray-500 mr-2" />
                             <input 
@@ -121,7 +121,7 @@ export default function Chats() {
                             </div>
                         </>
                     ) : (
-                        <p className="text-center text-gray-500 flex-1 flex items-center justify-center hidden md:flex">Select a chat to start messaging</p>
+                        <p className="text-center text-gray-500 flex-1 md:flex md:items-center md:justify-center">Select a chat to start messaging</p>
                     )}
                 </div>
             </div>
