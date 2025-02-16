@@ -3,7 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import githubLogo from "../assets/github.svg";
-import { AtSign, CalendarCheck, Link, Send } from "lucide-react";
+import { AtSign, Calendar, CalendarCheck, Code, Link, MessagesSquareIcon, Rocket, Send, Star, Trophy, User } from "lucide-react";
 
 export default function Profile() {
   const { currentUser } = useAuth();
@@ -59,10 +59,10 @@ export default function Profile() {
   }, [currentUser]);
 
   if (!currentUser) {
-    return <h1>Please log in with GitHub to view your profile.</h1>;
+    return <h1 className="flex h-screen justify-center items-center text-xl">Please log in to view your profile. </h1>;
   }
 
-  if (loading) return <h1>Loading GitHub data...</h1>;
+  if (loading) return <h1 className="flex h-screen justify-center items-center text-xl">Loading GitHub data...</h1>;
   if (error) return <h1>Error: {error}</h1>;
 
   return (
@@ -172,7 +172,7 @@ export default function Profile() {
 
         <div className="flex flex-col gap-2 bg-white mx-6 p-4 rounded-lg mt-2">
           <span className=" font-medium text-lg text-start mb-3">
-            Repositories count
+            Repositories count <span className="text-blue-400">({totalRepos+1})</span>
           </span>
           <ul className="flex flex-wrap gap-2">
             {Object.entries(githubData.languageCount).map(
@@ -186,6 +186,56 @@ export default function Profile() {
               )
             )}
           </ul>
+        </div>
+      </div>
+
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-2 flex-1 bg-white w-[45%] ml-6  justify-center p-4 rounded-lg mt-2">
+          <span className="text-normal font-medium">Recent Activity</span>
+          <div className="flex gap-2 items-center "><User className="bg-blue-200 text-blue-500 rounded-full w-8 h-8 p-2"/><span className="text-gray-700 text-sm">Joined</span><span className="font-medium">AI innovation Squad</span></div>
+          <div className="flex gap-2 items-center "><Rocket className="bg-green-200 text-green-500 rounded-full w-8 h-8 p-2"/><span className="text-gray-700 text-sm">Created</span><span className="font-medium">TechCrunch Disrupt 2025</span></div>
+          <div className="flex gap-2 items-center "><Calendar className="w-8 h-8 p-2"/><span className="text-gray-700 text-sm">12 Jan 2025</span></div>
+          <div className="flex gap-2 items-center "><Star className="w-8 h-8 p-2"/><span className="text-gray-700 text-sm">Feedback by the Lead - </span>Did an amazing jod in the hackathon ! great team work and effort</div>
+          <br />
+          <div className="flex gap-2 items-center "><User className="bg-blue-200 text-blue-500 rounded-full w-8 h-8 p-2"/><span className="text-gray-700 text-sm">Joined</span><span className="font-medium">AI Trailblazers Squad</span></div>
+          <div className="flex gap-2 items-center "><Rocket className="bg-green-200 text-green-500 rounded-full w-8 h-8 p-2"/><span className="text-gray-700 text-sm">Created</span><span className="font-medium">NextGen AI Summit 2025</span></div>
+          <div className="flex gap-2 items-center "><Calendar className="w-8 h-8 p-2"/><span className="text-gray-700 text-sm">15 Feb 2025</span></div>
+          <div className="flex gap-2 items-center "><Star className="w-8 h-8 p-2"/><span className="text-gray-700 text-sm">Feedback by the Lead - </span>Outstanding performance in the hackathon! Exceptional collaboration and innovation. 🚀</div>
+        </div>
+
+        <div className="flex flex-col gap-2 bg-white mx-6 p-4 rounded-lg mt-2">
+          <span className="text-normal font-medium">Achievements</span>
+          <div className=" flex items-center gap-2">
+            <div>
+            <Trophy className="bg-green-200 text-green-500 rounded-full w-8 h-8 p-2"/>
+            </div>
+
+            <div className="flex flex-col ">
+              <p className="font-medium text-gray-900">Hackathon Champion</p>
+              <p className="text-gray-700 text-sm">First place in 3 hackathons</p>
+            </div>
+          </div>
+          <div className=" flex items-center gap-2">
+            <div>
+            <User className="bg-orange-200 text-orange-500 rounded-full w-8 h-8 p-2"/>
+            </div>
+
+            <div className="flex flex-col ">
+              <p className="font-medium text-gray-900">Team Player</p>
+              <p className="text-gray-700 text-sm">Led 5+ successful projects</p>
+            </div>
+          </div>
+          <div className=" flex items-center gap-2">
+            <div>
+            <Code className="bg-violet-200 text-violet-500 rounded-full w-8 h-8 p-2"/>
+            </div>
+
+            <div className="flex flex-col ">
+              <p className="font-medium text-gray-900">Code Master</p>
+              <p className="text-gray-700 text-sm">1000+ contributions</p>
+            </div>
+          </div>
+         
         </div>
       </div>
 
