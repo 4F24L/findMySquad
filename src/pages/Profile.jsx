@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import Button from "../components/Button";
 import githubLogo from "../assets/github.svg";
 import { AtSign, Calendar, CalendarCheck, Code, Link, Rocket, Send, Star, Trophy, User } from "lucide-react";
+import UserRating from "../components/UserRating"
 
 export default function Profile() {
   const { currentUser } = useAuth();
