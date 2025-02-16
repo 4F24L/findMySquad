@@ -20,24 +20,43 @@ export default function Register() {
   async function handleReg(e) {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
-      const userCrediential = await createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const user = userCrediential.user;
-      setIsLoading(false);
+      const user = userCredential.user;
+  
+      // Fetch GitHub avatar
+      let githubAvatarUrl = "";
+      if (githubUsername) {
+        try {
+          const response = await fetch(`https://api.github.com/users/${githubUsername}`);
+          if (response.ok) {
+            const data = await response.json();
+            githubAvatarUrl = data.avatar_url || "";
+          }
+        } catch (error) {
+          console.error("Error fetching GitHub avatar:", error);
+        }
+      }
+  
+      // Update Firebase profile
       await updateProfile(user, {
         displayName: githubUsername,
+        photoURL: githubAvatarUrl,
       });
+  
+      setIsLoading(false);
       navigate("/profile");
     } catch (err) {
       alert(err.message);
       setIsLoading(false);
     }
   }
+  
 
   return (
     <div className="flex justify-center items-center h-screen p-3">

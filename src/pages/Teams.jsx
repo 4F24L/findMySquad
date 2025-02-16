@@ -26,6 +26,7 @@ export default function Teams() {
     skills: "",
     createdBy: "",
     creatorId: "",
+    photoURL: ""
   });
 
   const fetchTeams = async () => {
@@ -69,10 +70,12 @@ export default function Teams() {
         skills: formData.skills.split(",").map((skill) => skill.trim()),
         createdOn: new Date().toISOString(),
         total_members: Number(formData.total_members),
+        photoURL: currentUser.photoURL || "",
         members: [
           {
             uid: currentUser.uid,
             displayName: currentUser.displayName || "Anonymous",
+            photoURL: currentUser.photoURL || ""
           },
         ],
       };
@@ -89,11 +92,13 @@ export default function Teams() {
           {
             uid: currentUser.uid,
             displayName: currentUser.displayName || "Anonymous",
+            photoURL: currentUser.photoURL || ""
           },
         ],
         skills: "",
         createdBy: "",
         creatorId: "",
+        photoURL: currentUser.photoURL || ""
       });
 
       alert("Squad Formed Successfully!");
@@ -109,8 +114,6 @@ export default function Teams() {
       team.hackathon_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       team.hackathon_description.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  if (loading) return <p>Loading Squads...</p>;
 
   return (
     <>

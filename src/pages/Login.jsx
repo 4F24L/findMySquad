@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
@@ -9,7 +9,6 @@ import Button from "../components/Button";
 import githubLogo from "../assets/github.svg";
 
 export default function Login() {
-  const [githubUsername, setGithubUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -22,16 +21,12 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const userCrediential = await createUserWithEmailAndPassword(
+      await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const user = userCrediential.user;
       setIsLoading(false);
-      await updateProfile(user, {
-        displayName: githubUsername,
-      });
       navigate("/profile");
     } catch (err) {
       alert(err.message);

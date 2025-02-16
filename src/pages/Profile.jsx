@@ -55,7 +55,7 @@ export default function Profile() {
       }
     }
 
-    // fetchGitHubData();
+    fetchGitHubData();
   }, [currentUser]);
 
   if (!currentUser) {
@@ -72,7 +72,7 @@ export default function Profile() {
       <div className="bg-white mx-6 px-7 flex justify-between items-center py-4 pb-10 rounded-t-lg ">
         <div className=" flex gap-4">
           <div className=" rounded-full">
-            {githubData.avatar_url ? (
+            {githubData?.avatar_url ? (
               <img
                 className="object-cover rounded-full w-32 h-32 "
                 src={githubData.avatar_url}
@@ -141,10 +141,10 @@ export default function Profile() {
           </ul>
         }
       </div>
-      <div className="flex justify-around flex-wrap px-6 gap-3">
-        <div className="flex flex-col flex-1 gap-2 bg-white w-full md:w-5/11  justify-center p-4 rounded-lg mt-2">
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-2 flex-1 bg-white w-[45%] ml-6  justify-center p-4 rounded-lg mt-2">
           <span className="text-normal font-medium">About :</span>
-          <p>N / A</p>
+          <p>No bio provided</p>
 
           <p
             className="flex text-normal text-gray-700 font-medium mt-3"
@@ -170,7 +170,7 @@ export default function Profile() {
           </p>
         </div>
 
-        <div className="flex flex-col  gap-2  w-full md:w-5/11 bg-white p-4 rounded-lg mt-2">
+        <div className="flex flex-col gap-2 bg-white mx-6 p-4 rounded-lg mt-2">
           <span className=" font-medium text-lg text-start mb-3">
             Repositories count
           </span>
