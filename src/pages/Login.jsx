@@ -7,6 +7,7 @@ import { UsersRound } from "lucide-react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import githubLogo from "../assets/github.svg";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,9 +28,10 @@ export default function Login() {
         password
       );
       setIsLoading(false);
+      toast.success("Successfully logged in")
       navigate("/profile");
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
       setIsLoading(false);
     }
   }
@@ -88,6 +90,8 @@ export default function Login() {
             navigate("/register");
           }}>Sign Up</span></p>
       </div>
+
+      <div> <Toaster position="top-right"/></div>
     </div>
   );
 }

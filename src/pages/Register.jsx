@@ -7,6 +7,7 @@ import { UsersRound } from "lucide-react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import githubLogo from "../assets/github.svg";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Register() {
   const [githubUsername, setGithubUsername] = useState("");
@@ -39,7 +40,7 @@ export default function Register() {
             githubAvatarUrl = data.avatar_url || "";
           }
         } catch (error) {
-          console.error("Error fetching GitHub avatar:", error);
+          toast.error("Error fetching GitHub avatar:", error);
         }
       }
   
@@ -50,9 +51,10 @@ export default function Register() {
       });
   
       setIsLoading(false);
+      toast.success("Registration successful!");
       navigate("/profile");
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
       setIsLoading(false);
     }
   }
@@ -118,6 +120,8 @@ export default function Register() {
             navigate("/login");
           }}>Log in</span></p>
       </div>
+
+      <div><Toaster position="top-right"/></div>
     </div>
   );
 }
