@@ -13,33 +13,72 @@ import hackathonsData from "../../public/HackathonsData.json";
 
 export default function HackathonList() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMode, setSelectedMode] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filteredHackathons = hackathonsData.filter((h) =>
-    ["title", "theme", "mode"].some((key) =>
-      h[key].toLowerCase().includes(searchQuery.toLowerCase())
-    ) ||
-    h.categories.some((category) =>
-      category.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+  const modes = ["All", ...["Hybrid", "Offline", "Online"].sort()];
+  const categories = [
+    "All",
+    ...[...new Set(hackathonsData.flatMap((h) => h.categories))].sort()
+  ];
+
+  const filteredHackathons = hackathonsData.filter(
+    (h) =>
+      (["title", "theme", "mode"].some((key) =>
+        h[key].toLowerCase().includes(searchQuery.toLowerCase())
+      ) ||
+        h.categories.some((category) =>
+          category.toLowerCase().includes(searchQuery.toLowerCase())
+        )) &&
+      (selectedMode === "All" || h.mode === selectedMode) &&
+      (selectedCategory === "All" || h.categories.includes(selectedCategory))
   );
 
   return (
     <>
       <NavBar />
-      <div className="p-6 flex flex-col items-start bg-[#F3F4F6] rounded-lg shadow-md">
-        <div className="mb-4">
+      <div className="p-6 flex flex-col items-start bg-[#F3F4F6] rounded-lg">
+        <div className="mb-4 w-full">
           <h2 className="text-2xl font-bold text-gray-900">Upcoming Battles</h2>
           <p className="mt-1 text-sm text-gray-500">
             Find your next battle, assemble your squad, and compete to win!
           </p>
         </div>
-        <Input
-          type={"text"}
-          placeholder={"Search hackathons by title, theme or mode"}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          classes={"w-full mb-7"}
-        />
+
+        {/* Filter Section */}
+        <div className="w-full flex flex-col md:flex-row gap-4 mb-5">
+          <Input
+            type="text"
+            placeholder="Search hackathons by title, theme, or mode"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            classes="w-full md:w-4/6"
+          />
+          <select
+            value={selectedMode}
+            onChange={(e) => setSelectedMode(e.target.value)}
+            className="w-full md:w-1/6 p-2 border rounded-lg text-gray-600"
+          >
+            {modes.map((mode) => (
+              <option key={mode} value={mode}>
+                {mode}
+              </option>
+            ))}
+          </select>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full md:w-1/6 p-2 border rounded-lg text-gray-600 scrollbar-hide no-scrollbar"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Hackathon Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 w-full">
           {filteredHackathons.length > 0 ? (
             filteredHackathons.map((hackathon, index) => (
@@ -61,12 +100,12 @@ export default function HackathonList() {
                     {hackathon.mode}
                   </p>
                 </div>
-                <p className=" text-emerald-600 w-max px-2 rounded-lg border">
+                <p className="text-emerald-600 w-max px-2 rounded-lg border">
                   {hackathon.theme}
                 </p>
 
-                <div className="mt-4 space-y-2 text-gray-700 w-[100%] ">
-                  <p className="flex items-center ">
+                <div className="mt-4 space-y-2 text-gray-700 w-[100%]">
+                  <p className="flex items-center">
                     <UsersRound size={20} className="mr-2 text-gray-500" />
                     {hackathon.participants} participants
                   </p>
@@ -92,7 +131,7 @@ export default function HackathonList() {
                 </div>
 
                 <div className="flex justify-between items-center mt-4">
-                  <p className="flex items-center text-gray-600 ">
+                  <p className="flex items-center text-gray-600">
                     <CalendarClock size={20} className="mr-1" /> Starts on :{" "}
                     {hackathon?.date?.start}
                   </p>
